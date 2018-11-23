@@ -19,6 +19,7 @@ import android.util.Log;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
+    Cursor cursor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     //カーソルが最初の位置にあるときに画像を表示する
     private void getContentsInfo() {
 
@@ -79,18 +82,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 null, // フィルタ条件(null = フィルタなし)
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
-
         );
+
         if (cursor.moveToFirst()) {
             show();
         }
-        onDestroy();
     }
 
 
     //  現在のカーサー一を表示するshowメソッドを定義
     private void show() {
-        Cursor cursor = null;
+
 
         int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
         Long id = cursor.getLong(fieldIndex);
@@ -102,20 +104,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //cursorを進めるメソッド
     private void forward() {
-        Cursor cursor = null;
+        ;
         if (cursor.moveToNext()) {
             show();
         }
-        onDestroy();
     }
 
     //cursorを戻すメソッド
     private void backward(){
-        Cursor cursor = null;
+
         if(cursor.moveToPrevious()) {
             show();
         }
-        onDestroy();
+
     }
 
     //onClickメソッドを定義
@@ -133,6 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
             }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cursor.close();
+    }
 
         }
 
