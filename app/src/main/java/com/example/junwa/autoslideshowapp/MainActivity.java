@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setImageURI(imageUri);
     }
 
+    //cursorを進めるメソッド
     private void forward() {
         Cursor cursor = null;
         if (cursor.moveToNext()) {
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         onDestroy();
     }
 
+    //cursorを戻すメソッド
     private void backward(){
         Cursor cursor = null;
         if(cursor.moveToPrevious()) {
@@ -120,12 +122,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        // 「進むボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
+        // 「進むボタン」を押したら次の画像にカーソルが移動
         if (v.getId() == R.id.button3) {
             forward();
 
         }
-        // 「戻るボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
+        // 「戻るボタン」を押したら前の画像にカーソルが移動
         if(v.getId() == R.id. button1){
             backward();
 
