@@ -79,18 +79,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 null, // フィルタ条件(null = フィルタなし)
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
+
+        );
+        if (cursor.moveToFirst()) {
+            show();
+        }
+        cursor.close();
+    }
+
+
+
+    private void show() {
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
+                null, // 項目(null = 全項目)
+                null, // フィルタ条件(null = フィルタなし)
+                null, // フィルタ用パラメータ
+                null // ソート (null ソートなし)
         );
 
-        if (cursor.moveToFirst()) {
-            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-            Long id = cursor.getLong(fieldIndex);
-            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+        int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+        Long id = cursor.getLong(fieldIndex);
+        Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-            ImageView imageView = (ImageView) findViewById(R.id.imageView);
-            imageView.setImageURI(imageUri);
-        }
-
-        cursor.close();
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        imageView.setImageURI(imageUri);
     }
 
     @Override
@@ -106,16 +120,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v.getId() == R.id.button3) {
             if (cursor.moveToNext()) {
-                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-                Long id = cursor.getLong(fieldIndex);
-                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                show();
 
-                ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                imageView.setImageURI(imageUri);
+                if(v.getId() == R.id. button1){
+                    if(cursor.moveToPrevious()){
+                        show();
+                    }
+                }
             }
 
-            cursor.close();
         }
-
-            }
-        }
+    }
+}
