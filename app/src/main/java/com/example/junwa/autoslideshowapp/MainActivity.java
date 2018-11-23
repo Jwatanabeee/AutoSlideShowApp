@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    //カーソルが最初の位置にあるときに画像を表示する
     private void getContentsInfo() {
 
         // 画像の情報を取得する
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
+    //  現在のカーサー一を表示するshowメソッドを定義
     private void show() {
         ContentResolver resolver = getContentResolver();
         Cursor cursor = resolver.query(
@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setImageURI(imageUri);
     }
 
+    //onClickメソッドを定義
     @Override
     public void onClick(View v) {
         ContentResolver resolver = getContentResolver();
@@ -117,11 +118,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
         );
-
+        // 「進むボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
         if (v.getId() == R.id.button3) {
             if (cursor.moveToNext()) {
                 show();
-
+                // 「戻るボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
                 if(v.getId() == R.id. button1){
                     if(cursor.moveToPrevious()){
                         show();
