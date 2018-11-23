@@ -84,20 +84,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (cursor.moveToFirst()) {
             show();
         }
-        cursor.close();
+        onDestroy();
     }
 
 
     //  現在のカーサー一を表示するshowメソッドを定義
     private void show() {
-        ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
-                null, // 項目(null = 全項目)
-                null, // フィルタ条件(null = フィルタなし)
-                null, // フィルタ用パラメータ
-                null // ソート (null ソートなし)
-        );
+        Cursor cursor = null;
 
         int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
         Long id = cursor.getLong(fieldIndex);
@@ -107,29 +100,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setImageURI(imageUri);
     }
 
+    private void forward() {
+        Cursor cursor = null;
+        if (cursor.moveToNext()) {
+            show();
+        }
+        onDestroy();
+    }
+
+    private void backward(){
+        Cursor cursor = null;
+        if(cursor.moveToPrevious()) {
+            show();
+        }
+        onDestroy();
+    }
+
     //onClickメソッドを定義
     @Override
     public void onClick(View v) {
-        ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
-                null, // 項目(null = 全項目)
-                null, // フィルタ条件(null = フィルタなし)
-                null, // フィルタ用パラメータ
-                null // ソート (null ソートなし)
-        );
+
         // 「進むボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
         if (v.getId() == R.id.button3) {
-            if (cursor.moveToNext()) {
-                show();
-                // 「戻るボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
-                if(v.getId() == R.id. button1){
-                    if(cursor.moveToPrevious()){
-                        show();
-                    }
+            forward();
+
+        }
+        // 「戻るボタン」を押したら次の画像にカーソルが移動し、showメソッドを呼び出し、画像を表示
+        if(v.getId() == R.id. button1){
+            backward();
+
                 }
             }
 
         }
-    }
-}
+
