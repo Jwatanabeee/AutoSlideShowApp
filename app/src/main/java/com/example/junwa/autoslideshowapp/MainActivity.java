@@ -16,7 +16,7 @@ import android.view.View;
 import android.util.Log;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
 
@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         button3.setOnClickListener(this);
 
 
-
         // Android 6.0以降の場合
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // パーミッションの許可状態を確認する
@@ -51,13 +50,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getContentsInfo();
         }
-        }
 
 
-
-
-
-
+    }
 
 
     @Override
@@ -73,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void getContentsInfo() {
 
         // 画像の情報を取得する
@@ -86,16 +82,40 @@ public class MainActivity extends AppCompatActivity {
         );
 
         if (cursor.moveToFirst()) {
-            do {
-                // indexからIDを取得し、そのIDから画像のURIを取得する
+            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+            Long id = cursor.getLong(fieldIndex);
+            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+            ImageView imageView = (ImageView) findViewById(R.id.imageView);
+            imageView.setImageURI(imageUri);
+        }
+
+        cursor.close();
+    }
+
+    @Override
+    public void onClick(View v) {
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
+                null, // 項目(null = 全項目)
+                null, // フィルタ条件(null = フィルタなし)
+                null, // フィルタ用パラメータ
+                null // ソート (null ソートなし)
+        );
+
+        if (v.getId() == R.id.button3) {
+            if (cursor.moveToNext()) {
                 int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
                 Long id = cursor.getLong(fieldIndex);
                 Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-                Log.d("ANDROID", "URI : " + imageUri.toString());
-            } while (cursor.moveToNext());
+                ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                imageView.setImageURI(imageUri);
+            }
+
             cursor.close();
         }
 
-    }
-}
+            }
+        }
