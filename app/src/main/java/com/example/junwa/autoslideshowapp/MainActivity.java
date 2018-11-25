@@ -8,32 +8,85 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.view.View;
-import android.util.Log;
+import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
-    Cursor cursor = null;
+    Cursor cursor;
+    Button button1;
+    Button button2;
+    Button button3;
+    Timer mTimer;
+    TextView mTimerText;
+    double mTimerSec = 0.0;
+    Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(this);
+        button1 = (Button) findViewById(R.id.button1);
+        button1.setText("再生/停止");
+        button2 = (Button) findViewById(R.id.button2);
+        button2.setText("進む");
+        button3 = (Button) findViewById(R.id.button3);
+        button3.setText("戻る");
 
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(this);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                button1.setText("停止");
+                mTimer = new Timer();
+                mTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        mTimerSec += 0.1;
 
-        Button button3 = (Button) findViewById(R.id.button3);
-        button3.setOnClickListener(this);
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                            }
+                        });
+                    }
+                }, 2000, 2000);
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
+                                      @Override
+                                      public void onClick(View v) {
+                                          // 「進むボタン」を押したら次の画像にカーソルが移動
+                                          if (v.getId() == R.id.button2) {
+                                              forward();
+
+                                          }
+                                      }
+                                  });
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    if(v.getId() == R.id.button3){
+                        backward();
+
+                    }
+            }
+        });
+
+
+
+
 
 
         // Android 6.0以降の場合
@@ -75,8 +128,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void getContentsInfo() {
 
         // 画像の情報を取得する
+
+
+
         ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(
+        this.cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
                 null, // 項目(null = 全項目)
                 null, // フィルタ条件(null = フィルタなし)
@@ -93,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //  現在のカーサー一を表示するshowメソッドを定義
     private void show() {
 
-
         int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
         Long id = cursor.getLong(fieldIndex);
         Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
@@ -104,9 +159,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //cursorを進めるメソッド
     private void forward() {
-        ;
+
         if (cursor.moveToNext()) {
             show();
+        }
+        else {
+            cursor.moveToFirst();
+            show();
+
         }
     }
 
@@ -116,24 +176,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(cursor.moveToPrevious()) {
             show();
         }
+        else{
+            cursor.moveToLast();
+            show();
+        }
 
     }
 
-    //onClickメソッドを定義
-    @Override
-    public void onClick(View v) {
 
-        // 「進むボタン」を押したら次の画像にカーソルが移動
-        if (v.getId() == R.id.button3) {
-            forward();
 
-        }
-        // 「戻るボタン」を押したら前の画像にカーソルが移動
-        if(v.getId() == R.id. button1){
-            backward();
 
-                }
-            }
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
