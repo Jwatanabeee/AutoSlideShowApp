@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     Handler mHandler = new Handler();
     boolean auto_playing;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         button3 = (Button) findViewById(R.id.button3);
         button3.setText("戻る");
 
+
+
         button1.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -50,23 +53,27 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (auto_playing) {
+                    button2.setEnabled(true);
+                    button3.setEnabled(true);
+                    button1.setText("再生");
+                    if (mTimer != null) {
+                        mTimer.cancel();
+                        mTimer = null;
+                    }
+
+                } else {
+                    button2.setEnabled(false);
+                    button3.setEnabled(false);
+                    auto_playing = true;
                     if (mTimer == null) {
-                        button1.setText("再生");
-                        if (mTimer != null) {
-                            mTimer.cancel();
-                            mTimer = null;
-                        }
-                    } else {
-                        auto_playing = true;
                         mTimer = new Timer();
                         mTimer.schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                show();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        cursor.moveToNext();
+                                        forward();
                                     }
                                 });
                             }
@@ -81,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
                                       @Override
                                       public void onClick(View v) {
                                           // 「進むボタン」を押したら次の画像にカーソルが移動
+
                                           if (v.getId() == R.id.button2) {
                                               forward();
-
                                           }
                                       }
                                   });
@@ -94,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
                     if(v.getId() == R.id.button3){
                         backward();
 
+                        }
                     }
-            }
         });
 
 
