@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
     Button button2;
     Button button3;
     Timer mTimer;
-    TextView mTimerText;
-    double mTimerSec = 0.0;
     Handler mHandler = new Handler();
     boolean auto_playing;
 
@@ -51,29 +49,32 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                    mTimer = new Timer();
-                    mTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            auto_playing = true;
-
-                            mTimerSec += 0.1;
-
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                }
-                            });
+                if (auto_playing) {
+                    if (mTimer == null) {
+                        button1.setText("再生");
+                        if (mTimer != null) {
+                            mTimer.cancel();
+                            mTimer = null;
                         }
-                    }, 2000, 2000);
+                    } else {
+                        auto_playing = true;
+                        mTimer = new Timer();
+                        mTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                show();
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cursor.moveToNext();
+                                    }
+                                });
+                            }
+                        }, 2000, 2000);
 
-                if (auto_playing){
-                    button1.setText("停止");
+                        button1.setText("停止");
+                    }
                 }
-                else{
-                    button1.setText("再生");
-                }
-
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
