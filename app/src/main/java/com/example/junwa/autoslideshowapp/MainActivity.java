@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mTimerText;
     double mTimerSec = 0.0;
     Handler mHandler = new Handler();
+    boolean auto_playing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +46,34 @@ public class MainActivity extends AppCompatActivity {
         button3.setText("戻る");
 
         button1.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                button1.setText("停止");
-                mTimer = new Timer();
-                mTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        mTimerSec += 0.1;
 
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        });
-                    }
-                }, 2000, 2000);
+
+                    mTimer = new Timer();
+                    mTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            auto_playing = true;
+
+                            mTimerSec += 0.1;
+
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                }
+                            });
+                        }
+                    }, 2000, 2000);
+
+                if (auto_playing){
+                    button1.setText("停止");
+                }
+                else{
+                    button1.setText("再生");
+                }
+
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
