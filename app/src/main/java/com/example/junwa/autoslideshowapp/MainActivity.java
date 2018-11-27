@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (auto_playing) {
+                    auto_playing = false;
                     button2.setEnabled(true);
                     button3.setEnabled(true);
                     button1.setText("再生");
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                         mTimer.cancel();
                         mTimer = null;
                     }
-
                 } else {
                     button2.setEnabled(false);
                     button3.setEnabled(false);
@@ -150,8 +150,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 画像の情報を取得する
 
-
-
         ContentResolver resolver = getContentResolver();
         this.cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
@@ -164,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             show();
         }
+        else if (cursor== null){}
     }
 
 
@@ -182,8 +181,10 @@ public class MainActivity extends AppCompatActivity {
     private void forward() {
 
         if (cursor.moveToNext()) {
+
             show();
         }
+        else if(cursor == null){}
         else {
             cursor.moveToFirst();
             show();
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         if(cursor.moveToPrevious()) {
             show();
         }
+        else if(cursor == null){}
         else{
             cursor.moveToLast();
             show();
