@@ -180,11 +180,11 @@ public class MainActivity extends AppCompatActivity {
     //cursorを進めるメソッド
     private void forward() {
 
-        if (cursor.moveToNext()) {
+        if (cursor == null){}
+        else if(cursor.moveToNext()) {
 
             show();
         }
-        else if(cursor == null){}
         else {
             cursor.moveToFirst();
             show();
@@ -195,10 +195,10 @@ public class MainActivity extends AppCompatActivity {
     //cursorを戻すメソッド
     private void backward(){
 
-        if(cursor.moveToPrevious()) {
+        if(cursor == null){}
+        else if (cursor.moveToPrevious()) {
             show();
         }
-        else if(cursor == null){}
         else{
             cursor.moveToLast();
             show();
